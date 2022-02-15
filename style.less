@@ -1,6 +1,7 @@
 * {
   box-sizing: border-box;
 }
+
 .calender {
   display: flex;
   flex-flow: row wrap;
@@ -21,16 +22,18 @@
     .afterDate {
       width: 100%;
       display: flex;
-      flex-flow: row nowrap;
       align-items: center;
       justify-content: center;
+
       .icon {
-        width: @w;
+        min-width: @w;
         height: @w;
         border-radius: 5px;
       }
-      .text{
+
+      .text {
         font-size: 1.5vh;
+        word-break: break-all;
       }
     }
   }
@@ -52,32 +55,38 @@
   transform: translate(-50%, 0);
   border: 2vh solid black;
   background: #fff;
-  .buttons{
+
+  .buttons {
     display: flex;
     justify-content: space-around;
     width: 100%;
     position: absolute;
     bottom: 10vh;
     margin: 0;
-    button{
+
+    button {
       width: 25%;
       font-size: 4vh;
       border: none;
-      padding: 5px 10px ;
+      padding: 5px 10px;
       border-radius: 10px;
     }
-    button:first-child{
+
+    button:first-child {
       background-color: #66cccc;
       border-bottom: 8px solid #66aaaa;
-      &:active{
+
+      &:active {
         border-bottom: 2px solid #66aaaa;
         transform: translateY(6px);
       }
     }
-    button:nth-child(2){
+
+    button:nth-child(2) {
       background-color: #ee4444;
       border-bottom: 8px solid #cc3333;
-      &:active{
+
+      &:active {
         border-bottom: 2px solid #cc3333;
         transform: translateY(6px);
       }
@@ -112,10 +121,12 @@
       border: none;
     }
   }
-  h1{
+
+  h1 {
     letter-spacing: 0;
   }
-  .close{
+
+  .close {
     position: absolute;
     right: 5%;
     top: 0%;
@@ -123,7 +134,8 @@
     margin: 0;
     cursor: default;
     font-family: Arial, Helvetica, sans-serif;
-    &:hover{
+
+    &:hover {
       color: red;
     }
   }
