@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet/less" type="text/css" href="style.less" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.11.1/less.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+</head>
+
+<body>
+  <div class="calender" x-data="data()" x-init="setup">
+    <h1 x-text="title"></h1>
+    <template x-for="i in zh">
+      <div x-text="i" class="item weeklist"> </div>
+    </template>
+    <template x-for="(i,id) in daylist">
+      <div :class="{'item':i.date!=today,'item red':i.date==today}" @click="dayClick(i,id)">
+        <span x-text="i.date"></span>
+        <div class="afterDate">
+          <div class="icon" :style="'background:'+i.color"></div>
+          <div x-text="i.text" class="text"></div>
+        </div>
+      </div>
+    </template>
+    <div class="editor" x-show="showEditor" @click.away="editorClose">
+      <h1 x-text="editInfo.date"></h1>
+      <div>
+        <label for="color" :style="'background:'+picolor+';'"> </label>
+        <input type="color" id="color" x-model="picolor">
+        <input type="text" placeholder="text" x-model="pitext" x-ref="input" @focusout="fout"
+          @focus="$refs.input.style.borderColor=picolor">
+      </div>
+    </div>
+  </div>
+  <script>
+    function data() {
+      return {
+        zh: ['一', '二', '三', '四', '五', '六', '七'],
+        title: "",
+        daylist: [],
+        today: null,
+        showEditor: false,
+        editInfo: {},
+        picolor: "#66cccc",
+        pitext:"",
+        setup() {
+          let d = new Date();
+          this.title = d.getFullYear() + "/" + (d.getMonth() + 1)
+          this.today = d.getDate()
+          this.updateDaylist()
+        },
+        dayClick(item, id) {
+          if (typeof item == "string" || this.showEditor) return
+          console.log(item.date);
+          this.showEditor = true
+          this.editInfo = item;
+          if (item.color) this.picolor=item.color
+        },
+        editorClose() {
+          this.showEditor = false;
+          this.editInfo.color=this.picolor
+          this.editInfo.text=this.pitext
+          this.pitext=""
+        },
+        fout() {
+          this.$refs.input.style.borderColor = '#eee'
+        },
+        updateDaylist() {
+          let d = new Date();
+          let date = d.getDate();
+          let day = d.getDay()
+          this.daylist = []
+          for (let i = 1; i <= 30; i++) {
+            let item = {
+              date: i,
+              color: '',
+              text:""
+            }
+            this.daylist.push(item)
+          }
+          let t = day - date % 7;
+          if (t < 0) t += 7;
+          for (let i = 0; i < t; i++) {
+            this.daylist.unshift("");
+          }
+        },
+        log(e) {
+          console.log(e);
+        },
+      }
+    }
+  </script>
+</body>
+
+</html>

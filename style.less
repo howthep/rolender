@@ -1,0 +1,120 @@
+* {
+  box-sizing: border-box;
+}
+.calender {
+  display: flex;
+  flex-flow: row wrap;
+  width: 100%;
+
+  .item {
+    width: 14%;
+    text-align: center;
+    height: 14vh;
+    font-size: 3vh;
+
+    &:hover {
+      background: #eee;
+    }
+
+    @w: 2vh;
+
+    .afterDate {
+      width: 100%;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: center;
+      .icon {
+        width: @w;
+        height: @w;
+        border-radius: 5px;
+      }
+      .text{
+        font-size: 1.5vh;
+      }
+    }
+  }
+
+  .weeklist {
+    height: 8vh;
+  }
+}
+
+.editor {
+  @r: 60px;
+  border-radius: @r;
+  position: fixed;
+  top: 20%;
+  bottom: 20%;
+  left: 50%;
+  width: 90%;
+  max-width: 640px;
+  transform: translate(-50%, 0);
+  border: 2vh solid black;
+  background: #fff;
+
+  div {
+    display: flex;
+    flex-flow: row;
+    margin: 4vh;
+
+    input[type="text"] {
+      outline: none;
+      border: none;
+      border-bottom: 3px solid #eee;
+      width: 100%;
+      font-size: 3vh;
+      transition: .5s;
+    }
+
+    label {
+      border-radius: @r/4;
+      width: 6vh;
+      height: 4vh;
+      background: #000;
+    }
+
+    input#color {
+      opacity: 0;
+      transform: scale(0);
+      width: 0;
+      border: none;
+    }
+  }
+  h1{
+    letter-spacing: 0;
+  }
+}
+
+h1 {
+  width: 100%;
+  text-align: center;
+  font-size: 4vh;
+  letter-spacing: .5vh;
+}
+
+body {
+  min-height: 100vh;
+  max-width: 1024px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+.red {
+  color: red;
+}
+
+.bgred {
+  background-color: red;
+}
+
+.bgblue {
+  background: blue;
+}
