@@ -34,6 +34,7 @@
         <input type="text" placeholder="text" x-model="pitext" x-ref="input" @focusout="fout"
           @focus="$refs.input.style.borderColor=picolor">
       </div>
+      <div class="close" @click="editorClose">X</div>
     </div>
   </div>
   <script>
