@@ -5,10 +5,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Rolender</title>
   <link rel="stylesheet/less" type="text/css" href="style.less" />
-  <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.11.1/less.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+  <script src="less.min.js"></script>
+  <script src="alpine.min.js" defer></script>
 </head>
 
 <body>
@@ -35,6 +35,10 @@
           @focus="$refs.input.style.borderColor=picolor">
       </div>
       <div class="close" @click="editorClose">X</div>
+      <div class="buttons">
+        <button @click="editorSave">保存</button>
+        <button @click="editorClose">取消</button>
+      </div>
     </div>
   </div>
   <script>
@@ -44,28 +48,37 @@
         title: "",
         daylist: [],
         today: null,
-        showEditor: false,
+        showEditor: true,
         editInfo: {},
         picolor: "#66cccc",
-        pitext:"",
+        pitext: "",
         setup() {
           let d = new Date();
-          this.title = d.getFullYear() + "/" + (d.getMonth() + 1)
+          let month = (d.getMonth() + 1)
+          this.title = d.getFullYear() + "/" + month
           this.today = d.getDate()
           this.updateDaylist()
+          if (month != localStorage.month) localStorage.daylist = ''
+          this.daylist = JSON.parse(localStorage.daylist)
         },
         dayClick(item, id) {
-          if (typeof item == "string" || this.showEditor) return
+          if (typeof item == "string" || this.showEditor || item.date > this.today) return
           console.log(item.date);
           this.showEditor = true
           this.editInfo = item;
-          if (item.color) this.picolor=item.color
+          this.pitext=item.text;
+          if (item.color) this.picolor = item.color
+        },
+        editorSave() {
+          this.showEditor = false;
+          this.editInfo.color = this.picolor
+          this.editInfo.text = this.pitext
+          this.pitext = ""
+          localStorage.daylist = JSON.stringify(this.daylist)
+          localStorage.month = new Date().getMonth() + 1
         },
         editorClose() {
-          this.showEditor = false;
-          this.editInfo.color=this.picolor
-          this.editInfo.text=this.pitext
-          this.pitext=""
+          this.showEditor = false
         },
         fout() {
           this.$refs.input.style.borderColor = '#eee'
@@ -79,7 +92,7 @@
             let item = {
               date: i,
               color: '',
-              text:""
+              text: ""
             }
             this.daylist.push(item)
           }

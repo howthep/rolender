@@ -52,6 +52,37 @@
   transform: translate(-50%, 0);
   border: 2vh solid black;
   background: #fff;
+  .buttons{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    position: absolute;
+    bottom: 10vh;
+    margin: 0;
+    button{
+      width: 25%;
+      font-size: 4vh;
+      border: none;
+      padding: 5px 10px ;
+      border-radius: 10px;
+    }
+    button:first-child{
+      background-color: #66cccc;
+      border-bottom: 8px solid #66aaaa;
+      &:active{
+        border-bottom: 2px solid #66aaaa;
+        transform: translateY(6px);
+      }
+    }
+    button:nth-child(2){
+      background-color: #ee4444;
+      border-bottom: 8px solid #cc3333;
+      &:active{
+        border-bottom: 2px solid #cc3333;
+        transform: translateY(6px);
+      }
+    }
+  }
 
   div {
     display: flex;
@@ -91,6 +122,7 @@
     font-size: 6vh;
     margin: 0;
     cursor: default;
+    font-family: Arial, Helvetica, sans-serif;
     &:hover{
       color: red;
     }
