@@ -84,14 +84,16 @@
           let month = (d.getMonth() + 1)
           this.title = d.getFullYear() + "/" + month
           this.today = d.getDate()
-          localStorage.daylist=JSON.stringify(["",{color:"",date:1,text:""}])
           this.updateDaylist()
           if (localStorage.daylist == ""||month != localStorage.month  ) {
             localStorage.daylist = ""
           } else {
             this.daylist = JSON.parse(localStorage.daylist)
           }
-          if(typeof this.daylist[0] == "string") this.updateDaylist()
+          if(typeof this.daylist[0] == "string") {
+            this.updateDaylist()
+            localStorage.daylist=""
+          }
         },
         lineNew() {
           this.editForm.push({
