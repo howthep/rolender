@@ -88,10 +88,13 @@
 
     button {
       width: 25%;
-      font-size: 4vh;
       border: none;
+      font-size: 3vh;
       padding: 5px 10px;
       border-radius: 10px;
+      @media (max-width:768px) {
+        font-size: 2vw;
+      }
     }
 
     button:first-child {
