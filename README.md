@@ -1,2 +1,2 @@
 # rolender
-a calender for me,
+a calender for me,for learning and using
