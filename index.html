@@ -14,25 +14,36 @@
 <body>
   <div class="calender" x-data="data()" x-init="setup">
     <h1 x-text="title"></h1>
+
     <template x-for="i in zh">
       <div x-text="i" class="item weeklist"> </div>
     </template>
-    <template x-for="(i,id) in daylist">
-      <div :class="{'item':i.date!=today,'item red':i.date==today}" @click="dayClick(i,id)">
-        <span x-text="i.date"></span>
-        <div class="afterDate">
-          <div class="icon" :style="'background:'+i.color"></div>
-          <span x-text="i.text" class="text"></span>
-        </div>
+
+    <template x-for="(day,id) in daylist" key="id">
+      <div title="点击以编辑" :class="{'item':day.date!=today,'item red':day.date==today}" @click="dayClick(day,id)">
+        <span x-text="day.date"></span>
+        <template x-for="record in day.records">
+          <div class="afterDate">
+            <div class="icon" :style="'background:'+record.color"></div>
+            <span x-text="record.text" class="text"></span>
+          </div>
+        </template>
       </div>
     </template>
+
     <div class="editor" x-show="showEditor" @click.away="editorClose">
       <h1 x-text="editInfo.date"></h1>
-      <div>
-        <label for="color" :style="'background:'+picolor+';'"> </label>
-        <input type="color" id="color" x-model="picolor">
-        <input type="text" placeholder="text" x-model="pitext" x-ref="input" @focusout="fout"
-          @focus="$refs.input.style.borderColor=picolor">
+      <template x-for="(record,id) in editForm">
+        <div class="line">
+          <label :for="'color'+id" title="点击更改颜色" :style="'background:'+editForm[id].color+';'"> </label>
+          <input type="color" :id="'color'+id" x-model="editForm[id].color">
+          <input type="text" placeholder="text" x-model="editForm[id].text" :x-ref="'input'+id" @focusout="fout(id)"
+            @keydown.enter="$refs['input'+id].blur()" @focus="$refs['input'+id].style.borderColor=record.color">
+        </div>
+      </template>
+      <div class="lineButton">
+        <button @click="lineNew" x-show="editForm.length<=3">+</button>
+        <button @click="lineDel" x-show="editForm.length>1">-</button>
       </div>
       <div class="close" @click="editorClose">X</div>
       <div class="buttons">
@@ -40,48 +51,83 @@
         <button @click="editorClose">取消</button>
       </div>
     </div>
+
   </div>
   <script>
     function data() {
       return {
         zh: ['一', '二', '三', '四', '五', '六', '七'],
         title: "",
-        daylist: [],
+        daylist: [{
+          date: "ros",
+          records: [{
+            text: "text1"
+          }, {
+            text: "text1"
+          }, {
+            text: "text1"
+          }]
+        }],
         today: null,
         showEditor: false,
-        editInfo: {},
-        picolor: "#66cccc",
-        pitext: "",
+        editInfo: {
+          records: []
+        },
+        picolor: ["#66cccc"],
+        pitext: [""],
+        editForm: [{
+          color: "#66cccc",
+          text: ""
+        }],
         setup() {
           let d = new Date();
           let month = (d.getMonth() + 1)
           this.title = d.getFullYear() + "/" + month
           this.today = d.getDate()
           this.updateDaylist()
-          if (month != localStorage.month) localStorage.daylist = ''
-          this.daylist = JSON.parse(localStorage.daylist)
+          if (!localStorage.daylist||month != localStorage.month || typeof this.daylist[0] == "string") {
+            localStorage.daylist = ""
+          } else {
+            this.daylist = JSON.parse(localStorage.daylist)
+          }
+        },
+        lineNew() {
+          this.editForm.push({
+            color: "#66cccc",
+            text: ""
+          })
+        },
+        lineDel() {
+          this.editForm.pop()
         },
         dayClick(item, id) {
-          if (typeof item == "string" || this.showEditor || item.date > this.today) return
-          console.log(item.date);
+          //openEditor
+          if (typeof item.date == "string" || this.showEditor || item.date > this.today) return
           this.showEditor = true
           this.editInfo = item;
-          this.pitext=item.text;
-          if (item.color) this.picolor = item.color
+          this.editForm = [];
+          if (item.records[0].text) {
+            Object.assign(this.editForm, item.records)
+          } else {
+            this.editForm = [{
+              color: "#66cccc",
+              text: ""
+            }]
+          }
         },
         editorSave() {
           this.showEditor = false;
-          this.editInfo.color = this.picolor
-          this.editInfo.text = this.pitext
-          this.pitext = ""
+          // if (this.editForm[0].text)
+          this.editInfo.records = []
+          Object.assign(this.editInfo.records, this.editForm);
           localStorage.daylist = JSON.stringify(this.daylist)
           localStorage.month = new Date().getMonth() + 1
         },
         editorClose() {
           this.showEditor = false
         },
-        fout() {
-          this.$refs.input.style.borderColor = '#eee'
+        fout(id) {
+          this.$refs['input' + id].style.borderColor = '#eee'
         },
         updateDaylist() {
           let d = new Date();
@@ -91,15 +137,20 @@
           for (let i = 1; i <= 30; i++) {
             let item = {
               date: i,
-              color: '',
-              text: ""
+              records: [{
+                text: '',
+                color: ''
+              }],
             }
             this.daylist.push(item)
           }
           let t = day - date % 7;
           if (t < 0) t += 7;
           for (let i = 0; i < t; i++) {
-            this.daylist.unshift("");
+            this.daylist.unshift({
+              date: "",
+              records: []
+            });
           }
         },
         log(e) {
